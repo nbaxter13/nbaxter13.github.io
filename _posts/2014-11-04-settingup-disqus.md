@@ -63,7 +63,7 @@ the `_includes` folder. Go ahead and do the following from the command line:
     git commit -m "Initial commit"  
 
 
-Now open up `_layouts/default.html`. In the middle of the file you'll see a
+Now open up `_layouts/post.html`. In the middle of the file you'll see a
 line that says `{{ "{{ content " }}}}`. Insert a line after that and add this `{{ "{%
 include comments.html " }}%}`.
 
