@@ -67,10 +67,11 @@ Now open up `_layouts/default.html`. In the middle of the file you'll see a
 line that says `{{ "{{ content " }}}}`. Insert a line after that and add this `{{ "{%
 include comments.html " }}%}`.
 
-Save and close the file and commit the change:
+Save and close the file, commit the change, and push:
 
     git add _layouts/default.html  
     git commit -m "Added comments to layout"  
+    git push
 
 Now go to your browser and hit refresh. At the bottom you should see the Disqus
 commenting pane. Well done!
