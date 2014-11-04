@@ -43,7 +43,7 @@ disqus_shortname` (be sure to replace 'example' with your github user name):
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'example'; // required: replace example with your forum shortname
-        		var disqus_identifier = '{{ "{{ page.url " }}}}';
+        		var disqus_identifier = '{% raw %}{{ page.url }}';
 
         		var disqus_url = 'http://example.github.io{{ "{{ page.url " }}}}';
 
