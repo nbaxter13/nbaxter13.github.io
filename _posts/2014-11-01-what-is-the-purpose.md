@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "What is the purpose of this blog?"
-date:   2014-11-04
+date:   2014-11-01 13:55:47
 comments: true
 ---
 

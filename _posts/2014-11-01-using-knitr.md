@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "kntir demonstration"
-date:   2014-11-04
+date:   2014-11-01 13:38:47
 comments: true
 ---
 
@@ -85,13 +85,13 @@ It is easy.
 plot(1:10)
 {% endhighlight %}
 
-![center](/../figs/2014-11-04-using-knitr/unnamed-chunk-2-1.png) 
+![center](/../figs/2014-11-04-using-knitr/unnamed-chunk-2-1.png)
 
 {% highlight r %}
 hist(rnorm(1000))
 {% endhighlight %}
 
-![center](/../figs/2014-11-04-using-knitr/unnamed-chunk-2-2.png) 
+![center](/../figs/2014-11-04-using-knitr/unnamed-chunk-2-2.png)
 
 ## inline code
 
@@ -104,13 +104,13 @@ Yes I know the value of pi is 3.1415927, and 2 times pi is 6.2831853.
 You can write code within other elements, e.g. a list
 
 1. foo is good
-    
+
     {% highlight r %}
     strsplit('hello indented world', ' ')[[1]]
     {% endhighlight %}
-    
-    
-    
+
+
+
     {% highlight text %}
     ## [1] "hello"    "indented" "world"
     {% endhighlight %}

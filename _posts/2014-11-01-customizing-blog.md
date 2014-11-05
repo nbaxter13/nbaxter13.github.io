@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Customizing your blog"
-date:   2014-11-02
+date:   2014-11-01 13:48:47
 comments: true
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Setting up Disqus"
-date:   2014-11-02
+date:   2014-11-01 13:43:47
 comments: true
 ---
 
