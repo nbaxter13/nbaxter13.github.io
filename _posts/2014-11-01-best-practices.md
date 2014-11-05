@@ -83,7 +83,10 @@ more than 50 lines
 comment symbol and a single space. They should explain the why, not the what.
 
 ### knitr
-???
+* All code chunks need to be named
+* Set `echo=T`
+* cache=?  
+* How much sourcing should we have within each document vs. imbedded functions?  
 
 
 
