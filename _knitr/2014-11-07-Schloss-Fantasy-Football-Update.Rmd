@@ -1,0 +1,31 @@
+---
+layout: post
+title:  "Schloss et al. Fantasy Football Update"
+date:   2014-11-07
+comments: true
+output:
+  html_document:
+    keep_md: yes
+---
+
+```{r startup, echo=FALSE}
+library(knitr)
+opts_chunk$set("fig.path"="../figs/")
+opts_chunk$set("fig.align"="center")
+opts_chunk$set("tidy" = TRUE)
+```
+
+## Week 10 Update
+Playoffs start in only 2 weeks, and everyone still has a chance of being the Schloss et al. 2014 Champion.  All but two teams will make the playoffs.  Currently the two losers are Curmudgeonly SchlossBots and Team McCrone, but it's not over yet. Here's how everyone's teams are trending:
+
+
+```{r, echo=FALSE}
+x <- read.delim('../data/slffl_scores.txt', header=T, sep='\t')
+plot(0, type='n', ylim=c(40,200), xlim=c(1,9), ylab='Score', xlab='Week')
+cols <- c('red','blue','green','orange','yellow','purple','black','grey','dark red','dark green')
+for(i in 1:nrow(x)){
+  points(unlist(x[i,2:10]), type='l', col=cols[i], lwd=3)
+}
+legend('topleft', legend=x[,1], col=cols, lwd=3, cex=0.8, box.lwd=0)
+```
+
