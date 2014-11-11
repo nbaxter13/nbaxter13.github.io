@@ -1,11 +1,12 @@
 ---
+title: "knitr demonstration"
+date: '2014-11-04'
 layout: post
-title:  "knitr demonstration"
-date:   2014-11-04
-comments: true
 output:
+  pdf_document: default
   html_document:
     keep_md: yes
+comments: yes
 ---
 
 ```{r startup, echo=FALSE}

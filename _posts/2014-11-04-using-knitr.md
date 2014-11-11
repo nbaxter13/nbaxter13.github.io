@@ -1,9 +1,14 @@
 ---
 layout: post
-title:  "kntir demonstration"
-date:   2014-11-01 13:38:47
+title:  "knitr demonstration"
+date:   2014-11-04
 comments: true
+output:
+  html_document:
+    keep_md: yes
 ---
+
+
 
 You can generate blog posts using the knitr R package. Don't be fooled, even
 though it is an R package, it allows one to run commands in Python and bash.
@@ -13,8 +18,29 @@ on how to use knitr.
 To get going, a template file should be copied from
 `_post_templates/YYYY-MM-DD-knitr-post-name.Rmd`, put into the `_knitr` folder,
 and renamed appropriately. Be sure to change the YAML front matter including the
-date and the title of the post. The first time you ever create a knitr document
-may need to run the following commands from the terminal:
+date and the title of the post. At this point there are two approaches you can
+take: RStudio or the command line.
+
+### RStudio
+This approach has the appeal of developing in the "safe" RStudio environment. But it does come at a cost of being somewhat clunky down the road. Using the YAML material at the top of this page and the iniital code chunk, which has been hidden, you can easily press "Knit HTML" and viola `*.md` and `*.html` files are generated. For the blog we are really only interested in the `*.md` file. If you look at the top of this file when it's conveted to a `*.md` file you'll see this:
+
+    # knitr demonstration
+    2014-11-04  
+
+You need to delete these two lines and re-insert the YAML header:
+
+    ---
+    layout: post
+    title:  "knitr demonstration"
+    date:   2014-11-04
+    comments: true
+    ---
+
+Save the `*.md` file and move it to the `_posts` folder. Delete the `*.html` file that was created. This strategy will work for converting any `*.Rmd` file to the Jekyll-compatible `*.md` file that you need to build a blog post.
+
+
+### Command line
+The first time you ever compile a knitr document from the command line you will need to run the following commands:
 
     chmod +x render_post.R
     chmod +x render_post.sh
@@ -34,7 +60,7 @@ If you already have the local version of the website loaded or you go ahead and
 load it now, then whenever you hit refresh on your browser the page will be
 updated.
 
-The third option is to
+----
 
 Below is a minimal R markdown example that I've swiped from the [knitr GitHub site](https://github.com/yihui/knitr-examples/raw/master/001-minimal.Rmd) plus
 some other goodies I've added to demonstrate that you can use bash and Python
@@ -55,7 +81,7 @@ A _paragraph_ here. A code chunk below (remember the three backticks):
 
 
 {% highlight r %}
-1+1
+1 + 1
 {% endhighlight %}
 
 
@@ -67,35 +93,35 @@ A _paragraph_ here. A code chunk below (remember the three backticks):
 
 
 {% highlight r %}
-.4-.7+.3 # what? it is not zero!
+0.4 - 0.7 + 0.3  # what? it is not zero!
 {% endhighlight %}
 
 
 
 {% highlight text %}
-## [1] 5.551115e-17
+## [1] 5.551e-17
 {% endhighlight %}
 
 ## graphics
 
-It is easy, but not really.
+It is easy.
 
 
 {% highlight r %}
 plot(1:10)
 {% endhighlight %}
 
-![center](../figs/2014-11-04-using-knitr/unnamed-chunk-2-1.png)
+<img src="../figs/unnamed-chunk-21.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 {% highlight r %}
 hist(rnorm(1000))
 {% endhighlight %}
 
-![center](../figs/2014-11-04-using-knitr/unnamed-chunk-2-2.png)
+<img src="../figs/unnamed-chunk-22.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 ## inline code
 
-Yes I know the value of pi is 3.1415927, and 2 times pi is 6.2831853.
+Yes I know the value of pi is 3.1416, and 2 times pi is 6.2832.
 
 
 
@@ -104,13 +130,13 @@ Yes I know the value of pi is 3.1415927, and 2 times pi is 6.2831853.
 You can write code within other elements, e.g. a list
 
 1. foo is good
-
+    
     {% highlight r %}
-    strsplit('hello indented world', ' ')[[1]]
+    strsplit("hello indented world", " ")[[1]]
     {% endhighlight %}
-
-
-
+    
+    
+    
     {% highlight text %}
     ## [1] "hello"    "indented" "world"
     {% endhighlight %}
@@ -128,6 +154,8 @@ ls *.Rmd
 
 {% highlight text %}
 ## 2014-11-04-using-knitr.Rmd
+## 2014-11-07-Heuristic-for-Logit-Models.Rmd
+## 2014-11-07-Schloss-Fantasy-Football-Update.Rmd
 {% endhighlight %}
 
 
