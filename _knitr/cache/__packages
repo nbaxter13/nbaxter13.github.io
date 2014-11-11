@@ -1,9 +1,4 @@
 AICcmodavg
 base
-datasets
-graphics
-grDevices
 gtools
 knitr
-stats
-utils

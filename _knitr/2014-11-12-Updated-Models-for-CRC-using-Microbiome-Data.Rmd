@@ -5,6 +5,13 @@ date: "November 7, 2014"
 output: pdf_document
 ---
 
+```{r startup, echo=FALSE}
+library(knitr)
+opts_chunk$set("fig.path"="../figs/")
+opts_chunk$set("fig.align"="center")
+opts_chunk$set("tidy" = TRUE)
+```
+
 I am trying to develop logit models for distinguishing healthy patients from those with colorectal cancer based on the abundances of bacterial populations in their gut microbiome.  To do this I would like to test all possible models containg 1-10 OTUs selected from the 309 most abundant OTUs.  Unfortunately that isn't possible, due to the inordinantly large number of possible combinations.  
 
 The number of combinations can be calculated using the formula n!/((n-r)!r!) where n is the number of OTUs to choose from (309) and r is the number of OTUs chosen for the model (1 to 10).  It can also be calculated with the choose() function in R.  I'll calculate how many models need to be tested for each number of OTUs (r=1 to r=10)
