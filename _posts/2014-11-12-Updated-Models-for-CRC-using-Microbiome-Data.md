@@ -5,15 +5,17 @@ date: "November 7, 2014"
 output: pdf_document
 ---
 
+
+
 I am trying to develop logit models for distinguishing healthy patients from those with colorectal cancer based on the abundances of bacterial populations in their gut microbiome.  To do this I would like to test all possible models containg 1-10 OTUs selected from the 309 most abundant OTUs.  Unfortunately that isn't possible, due to the inordinantly large number of possible combinations.  
 
 The number of combinations can be calculated using the formula n!/((n-r)!r!) where n is the number of OTUs to choose from (309) and r is the number of OTUs chosen for the model (1 to 10).  It can also be calculated with the choose() function in R.  I'll calculate how many models need to be tested for each number of OTUs (r=1 to r=10)
 
 
 {% highlight r %}
-for(r in 1:10){
-  cat(r,' OTUs: ',choose(309,r), '\n')
-  }
+for (r in 1:10) {
+    cat(r, " OTUs: ", choose(309, r), "\n")
+}
 {% endhighlight %}
 
 
@@ -40,54 +42,47 @@ Here's an example for the 4 OTU models
 {% highlight r %}
 library(gtools)
 library(AICcmodavg)
-{% endhighlight %}
-
-
-
-{% highlight text %}
-## Warning: no function found corresponding to methods exports from 'VGAM'
-## for: 'show'
-{% endhighlight %}
-
-
-
-{% highlight r %}
-setwd('~/Desktop/glne007/')
-meta <- read.delim('training.meta.txt', header=T, sep='\t')
-shared <- read.delim('training.an.0.03.0.03.subsample.0.03.filter.shared', header=T, sep='\t')
-shared <- shared[,-ncol(shared)] #removes rareOtus column from the filtered shared file
-shared <- shared[meta$dx!='adenoma',]
-meta <- meta[meta$dx!='adenoma',]
+setwd("~/Desktop/glne007/")
+meta <- read.delim("training.meta.txt", header = T, sep = "\t")
+shared <- read.delim("training.an.0.03.0.03.subsample.0.03.filter.shared", header = T, 
+    sep = "\t")
+shared <- shared[, -ncol(shared)]  #removes rareOtus column from the filtered shared file
+shared <- shared[meta$dx != "adenoma", ]
+meta <- meta[meta$dx != "adenoma", ]
 
 meta$dx <- as.character(meta$dx)
-meta$dx[meta$dx=='normal'] <- 0
-meta$dx[meta$dx=='cancer'] <- 1
+meta$dx[meta$dx == "normal"] <- 0
+meta$dx[meta$dx == "cancer"] <- 1
 meta$dx <- factor(meta$dx)
-mydata <- data.frame(cbind(meta,shared[4:ncol(shared)]))
+mydata <- data.frame(cbind(meta, shared[4:ncol(shared)]))
 otus <- colnames(shared[4:ncol(shared)])
-goodOTUs <- read.table('3otu.cancer.out') #Reads in a list of all 3-OTU models sorted by AIC
-goodOTUs <- goodOTUs[1:10,1:3] # For the sake of time i'm only taking the top 10 in this example
+goodOTUs <- read.table("3otu.cancer.out")  #Reads in a list of all 3-OTU models sorted by AIC
+goodOTUs <- goodOTUs[1:10, 1:3]  # For the sake of time i'm only taking the top 10 in this example
 
 combos <- c()
-for(x in otus){ # adds each of the 309 OTUs to the 100 top models
-  com <- cbind(goodOTUs, x)
-  combos <- rbind(combos, com)
-  } 
-
-getDuplicates <- function(x){ # removes models with duplicate OTUs
-  return(length(x) - length(unique(unlist(x))) )
+for (x in otus) {
+    # adds each of the 309 OTUs to the 100 top models
+    com <- cbind(goodOTUs, x)
+    combos <- rbind(combos, com)
 }
-dups <- apply(combos, MARGIN=1, FUN=getDuplicates)
-combos <- combos[!dups,]
 
-fun <- function(r){
-  return(c(r[1],r[2],r[3],r[4],AICc(suppressWarnings(glm(dx ~ mydata[,r[1]] + mydata[,r[2]] + mydata[,r[3]] + mydata[,r[4]], data=mydata, family=binomial('logit'))))))
+getDuplicates <- function(x) {
+    # removes models with duplicate OTUs
+    return(length(x) - length(unique(unlist(x))))
 }
-results <- apply(X=combos, MARGIN=1, FUN=fun)
+dups <- apply(combos, MARGIN = 1, FUN = getDuplicates)
+combos <- combos[!dups, ]
+
+fun <- function(r) {
+    return(c(r[1], r[2], r[3], r[4], AICc(suppressWarnings(glm(dx ~ mydata[, 
+        r[1]] + mydata[, r[2]] + mydata[, r[3]] + mydata[, r[4]], data = mydata, 
+        family = binomial("logit"))))))
+}
+results <- apply(X = combos, MARGIN = 1, FUN = fun)
 results <- t(results)
-results <- results[order(results[,5], decreasing=F),]
-colnames(results) <- c('OTU1','OTU2','OTU3','OTU4','AIC')
-head(results, n=10)
+results <- results[order(results[, 5], decreasing = F), ]
+colnames(results) <- c("OTU1", "OTU2", "OTU3", "OTU4", "AIC")
+head(results, n = 10)
 {% endhighlight %}
 
 
@@ -110,12 +105,12 @@ head(results, n=10)
 Using the best models with 3-10 OTUs, I regenerated the ROC curves for models with only microbiome data.
 
 ###Cancer vs Healthy: 3,5,7,10 OTUs
-![center](/../figs/2014-11-12-Updated-Models-for-CRC-using-Microbiome-Data/unnamed-chunk-3.png) 
+<img src="/../figs/unnamed-chunk-3.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
 ### Adenoma vs Healthy: 3,5,7,10 OTUs
-![center](/../figs/2014-11-12-Updated-Models-for-CRC-using-Microbiome-Data/unnamed-chunk-4.png) 
+<img src="/../figs/unnamed-chunk-4.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
 ### Lesion vs Healthy: 3,5,7,10 OTUs
-![center](/../figs/2014-11-12-Updated-Models-for-CRC-using-Microbiome-Data/unnamed-chunk-5.png) 
+<img src="/../figs/unnamed-chunk-5.png" title="center" alt="center" style="display: block; margin: auto;" />
