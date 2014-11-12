@@ -1,5 +1,4 @@
 _site
 .sass-cache
-/figs/
 _knitr/*.md
 _knitr/*.html
