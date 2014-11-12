@@ -2,7 +2,9 @@
 title: "Updated Models for CRC Diagnosis Using Microbiome Data"
 author: "Niel"
 date: "November 7, 2014"
-output: pdf_document
+output:
+  html_document:
+    keep_md: yes
 ---
 
 
@@ -42,6 +44,18 @@ Here's an example for the 4 OTU models
 {% highlight r %}
 library(gtools)
 library(AICcmodavg)
+{% endhighlight %}
+
+
+
+{% highlight text %}
+## Warning: no function found corresponding to methods exports from 'VGAM'
+## for: 'show'
+{% endhighlight %}
+
+
+
+{% highlight r %}
 setwd("~/Desktop/glne007/")
 meta <- read.delim("training.meta.txt", header = T, sep = "\t")
 shared <- read.delim("training.an.0.03.0.03.subsample.0.03.filter.shared", header = T, 
@@ -105,12 +119,12 @@ head(results, n = 10)
 Using the best models with 3-10 OTUs, I regenerated the ROC curves for models with only microbiome data.
 
 ###Cancer vs Healthy: 3,5,7,10 OTUs
-<img src="/../figs/unnamed-chunk-3.png" title="center" alt="center" style="display: block; margin: auto;" />
+<img src="/../figs/cancerHealthy.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
 ### Adenoma vs Healthy: 3,5,7,10 OTUs
-<img src="/../figs/unnamed-chunk-4.png" title="center" alt="center" style="display: block; margin: auto;" />
+<img src="/../figs/adenomaHealthy.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
 ### Lesion vs Healthy: 3,5,7,10 OTUs
-<img src="/../figs/unnamed-chunk-5.png" title="center" alt="center" style="display: block; margin: auto;" />
+<img src="/../figs/lesionHealthy.png" title="center" alt="center" style="display: block; margin: auto;" />

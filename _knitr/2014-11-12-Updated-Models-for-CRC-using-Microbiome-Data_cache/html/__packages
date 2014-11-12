@@ -5,5 +5,6 @@ graphics
 grDevices
 gtools
 knitr
+methods
 stats
 utils
