@@ -29,7 +29,8 @@ That is way too many models, so I need a way to run fewer of them while still fi
 
 This is the heuristic I decided to use. First I calculated all possible 3-OTU models (`r choose(309,3)` combinations). Then, rather than test all possible 4-OTU models (`r choose(309,4)`), I took the top 100 of the 3-OTUs models and sequentially added each of the 309 OTUs to them.  This resulted approximately `r 309*100` 4-OTU models and saved lots of time.  I then took the 100 best of those 4-OTU models and again added each of the 309 OTUs to them.  I repeated this process up to 10-OTU models.
 
-Here's an example for the 4 OTU models
+Here's an example for the 4 OTU models...
+
 ```{r}
 library(gtools)
 library(AICcmodavg)
@@ -72,10 +73,12 @@ head(results, n=10)
 ```
 
 
-Using the best models I found with 3-10 OTUs (though not necessarily the absolute best models, since I didn't test all possible combinations of OTUs), I generated ROC curves.
 
-###Cancer vs Healthy: 3,5,7,10 OTUs
-```{r, cancerHealthy, echo=FALSE, results='hide', warning=FALSE, message=F}
+###ROC Curves for models with 3, 5, 7, or 10 OTUs
+Using the best models I found with 3-10 OTUs (though not necessarily the absolute best models, since I didn't test all possible combinations of OTUs), I generated Reciever Operator Characteristic (ROC) curves.  I'll only show the code for the first plot.
+
+
+```{r, cancerHealthy, results='hide', warning=FALSE, message=F}
 library(pROC)
 setwd('~/Desktop/glne007/')
 meta <- read.delim('training.meta.txt', header=T, sep='\t')
@@ -120,7 +123,6 @@ legend('bottomright', col=c('orange','red','blue','dark green'), lty=c(1,1,1,1),
 ```
 
 
-### Adenoma vs Healthy: 3,5,7,10 OTUs
 ```{r adenomaHealthy, echo=FALSE, results='hide', warning=FALSE}
 setwd('~/Desktop/glne007/')
 shared <- read.delim('training.an.0.03.0.03.subsample.0.03.filter.shared', header=T, sep='\t')
@@ -166,7 +168,6 @@ legend('bottomright', col=c('orange','red','blue','dark green'), lty=c(1,1,1,1),
 ```
 
 
-### Lesion vs Healthy: 3,5,7,10 OTUs
 ```{r, lesionHealthy, echo=FALSE, results='hide', warning=FALSE}
 setwd('~/Desktop/glne007/')
 shared <- read.delim('training.an.0.03.0.03.subsample.0.03.filter.shared', header=T, sep='\t')
@@ -207,3 +208,8 @@ legend('bottomright', col=c('orange','red','blue','dark green'), lty=c(1,1,1,1),
        legend=c(sprintf('3 OTUs: AUC = %.3g', roc1$auc), sprintf('5 OTUs: AUC = %.3g', roc2$auc), sprintf('7 OTUs: AUC = %.3g', roc3$auc), sprintf('10 OTUs: AUC = %.3g', roc4$auc)))
 
 ```
+
+
+I will probably go back and rerun the models with the same heuristic, but take the top 1000 models from each step rather than the top 100.  That will require running the scripts on axiom, which I haven't tried yet.  Although the current models may not be absolute best, they are significantly better than the models I showed in my 812. The next step will be to add FIT results and demographic information to the models.
+
+

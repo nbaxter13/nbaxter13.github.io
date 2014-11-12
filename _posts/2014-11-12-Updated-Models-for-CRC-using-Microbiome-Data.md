@@ -40,7 +40,8 @@ That is way too many models, so I need a way to run fewer of them while still fi
 
 This is the heuristic I decided to use. First I calculated all possible 3-OTU models (4.869634 &times; 10<sup>6</sup> combinations). Then, rather than test all possible 4-OTU models (3.72527 &times; 10<sup>8</sup>), I took the top 100 of the 3-OTUs models and sequentially added each of the 309 OTUs to them.  This resulted approximately 3.09 &times; 10<sup>4</sup> 4-OTU models and saved lots of time.  I then took the 100 best of those 4-OTU models and again added each of the 309 OTUs to them.  I repeated this process up to 10-OTU models.
 
-Here's an example for the 4 OTU models
+Here's an example for the 4 OTU models...
+
 
 {% highlight r %}
 library(gtools)
@@ -119,15 +120,72 @@ head(results, n = 10)
 {% endhighlight %}
 
 
-Using the best models I found with 3-10 OTUs (though not necessarily the absolute best models, since I didn't test all possible combinations of OTUs), I generated ROC curves.
 
-###Cancer vs Healthy: 3,5,7,10 OTUs
+###ROC Curves for models with 3, 5, 7, or 10 OTUs
+Using the best models I found with 3-10 OTUs (though not necessarily the absolute best models, since I didn't test all possible combinations of OTUs), I generated Reciever Operator Characteristic (ROC) curves.  I'll only show the code for the first plot.
+
+
+
+{% highlight r %}
+library(pROC)
+setwd("~/Desktop/glne007/")
+meta <- read.delim("training.meta.txt", header = T, sep = "\t")
+shared <- read.delim("training.an.0.03.0.03.subsample.0.03.filter.shared", header = T, 
+    sep = "\t")
+shared <- shared[meta$dx != "adenoma", ]
+meta <- meta[meta$dx != "adenoma", ]
+
+meta$dx <- as.character(meta$dx)
+meta$dx[meta$dx == "normal"] <- 0
+meta$dx[meta$dx == "cancer"] <- 1
+meta$dx <- factor(meta$dx)
+mydata <- data.frame(cbind(meta, shared[4:ncol(shared)]))
+
+logit1 <- glm(dx ~ Otu000014 + Otu000035 + Otu000048, data = mydata, family = binomial("logit"))
+logit2 <- glm(dx ~ Otu000035 + Otu000048 + Otu002051 + Otu000063 + Otu000014, 
+    data = mydata, family = binomial("logit"))
+logit3 <- glm(dx ~ Otu000035 + Otu000048 + Otu002051 + Otu000063 + Otu002955 + 
+    Otu000057 + Otu000014, data = mydata, family = binomial("logit"))
+logit4 <- glm(dx ~ Otu000035 + Otu000048 + Otu002051 + Otu000063 + Otu002955 + 
+    Otu000057 + Otu000053 + Otu004344 + Otu000176 + Otu003036, data = mydata, 
+    family = binomial("logit"))
+
+prob1 = predict(logit1, type = c("response"))
+prob2 = predict(logit2, type = c("response"))
+prob3 = predict(logit3, type = c("response"))
+prob4 = predict(logit4, type = c("response"))
+mydata$prob1 = prob1
+mydata$prob2 = prob2
+mydata$prob3 = prob3
+mydata$prob4 = prob4
+roc1 <- roc(dx ~ prob1, data = mydata)
+roc2 <- roc(dx ~ prob2, data = mydata)
+roc3 <- roc(dx ~ prob3, data = mydata)
+roc4 <- roc(dx ~ prob4, data = mydata)
+
+par(mar = c(5, 5, 4, 1))
+plot(0, type = "n", xlim = c(1.01, 0), ylim = c(-0.01, 1.01), xaxs = "i", yaxs = "i", 
+    ylab = "Sensitivity", xlab = "Specificity", main = "Cancer vs. Healthy: Microbiome Only")
+plot(roc1, col = "orange", lwd = 2, add = T)
+plot(roc2, col = "red", lwd = 2, add = T)
+plot(roc3, col = "blue", lwd = 2, add = T)
+plot(roc4, col = "dark green", lwd = 2, add = T)
+points(abline(1, -1), col = "grey")
+legend("bottomright", col = c("orange", "red", "blue", "dark green"), lty = c(1, 
+    1, 1, 1), lwd = 3, legend = c(sprintf("3 OTUs: AUC = %.3g", roc1$auc), sprintf("5 OTUs: AUC = %.3g", 
+    roc2$auc), sprintf("7 OTUs: AUC = %.3g", roc3$auc), sprintf("10 OTUs: AUC = %.3g", 
+    roc4$auc)))
+{% endhighlight %}
+
 <img src="/../figs/cancerHealthy-1.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
-### Adenoma vs Healthy: 3,5,7,10 OTUs
 <img src="/../figs/adenomaHealthy-1.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
-### Lesion vs Healthy: 3,5,7,10 OTUs
 <img src="/../figs/lesionHealthy-1.png" title="center" alt="center" style="display: block; margin: auto;" />
+
+
+I will probably go back and rerun the models with the same heuristic, but take the top 1000 models from each step rather than the top 100.  That will require running the scripts on axiom, which I haven't tried yet.  Although the current models may not be absolute best, they are significantly better than the models I showed in my 812. The next step will be to add FIT results and demographic information to the models.
+
+
