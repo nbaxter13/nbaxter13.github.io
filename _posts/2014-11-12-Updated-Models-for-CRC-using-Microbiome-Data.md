@@ -9,7 +9,7 @@ output:
 
 
 
-I am trying to develop logit models for distinguishing healthy patients from those with colorectal cancer based on the abundances of bacterial populations in their gut microbiome.  To do this I would like to test all possible models containg 1-10 OTUs selected from the 309 most abundant OTUs.  Unfortunately that isn't possible, due to the inordinantly large number of possible combinations.  
+I am trying to develop logit models for distinguishing healthy patients from those with colorectal cancer based on the abundances of bacterial populations in their gut microbiome.  To do this I would like to test all possible models containg 1-10 OTUs selected from the 309 most abundant OTUs.  Unfortunately that isn't feasible, due to the inordinantly large number of possible combinations.  
 
 The number of combinations can be calculated using the formula n!/((n-r)!r!) where n is the number of OTUs to choose from (309) and r is the number of OTUs chosen for the model (1 to 10).  It can also be calculated with the choose() function in R.  I'll calculate how many models need to be tested for each number of OTUs (r=1 to r=10)
 
@@ -27,17 +27,17 @@ for (r in 1:10) {
 ## 2  OTUs:  47586 
 ## 3  OTUs:  4869634 
 ## 4  OTUs:  372527001 
-## 5  OTUs:  2.272e+10 
-## 6  OTUs:  1.151e+12 
-## 7  OTUs:  4.984e+13 
-## 8  OTUs:  1.881e+15 
-## 9  OTUs:  6.292e+16 
-## 10  OTUs:  1.888e+18
+## 5  OTUs:  22724147061 
+## 6  OTUs:  1.151357e+12 
+## 7  OTUs:  4.98373e+13 
+## 8  OTUs:  1.881358e+15 
+## 9  OTUs:  6.292098e+16 
+## 10  OTUs:  1.887629e+18
 {% endhighlight %}
 
-That is way too many models, so I need a way to run fewer of them while still finding the best (or nearly the best) models (i.e. a [heuristic](http://en.wikipedia.org/wiki/Heuristic_(computer_science)).
+That is way too many models, so I need a way to run fewer of them while still finding the best (or nearly the best) models (i.e. a [heuristic](http://en.wikipedia.org/wiki/Heuristic_(computer_science))).
 
-This is the heuristic I decided to use. First I calculated all possible 3-OTU models (4.8696 &times; 10<sup>6</sup> combinations). Then, rather than test all possible 4-OTU models (3.7253 &times; 10<sup>8</sup>), I took the top 100 of those models and sequentially added each of the 309 OTUs to them.  This results approximately 3.09 &times; 10<sup>4</sup> models and saves lots of time.  I then took the 100 best of thoe 4-OTU models and again added each of the 309 OTUs to them.  I repeated this process up to 10-OTU models.
+This is the heuristic I decided to use. First I calculated all possible 3-OTU models (4.869634 &times; 10<sup>6</sup> combinations). Then, rather than test all possible 4-OTU models (3.72527 &times; 10<sup>8</sup>), I took the top 100 of the 3-OTUs models and sequentially added each of the 309 OTUs to them.  This results approximately 3.09 &times; 10<sup>4</sup> 4-OTU models and saves lots of time.  I then took the 100 best of those 4-OTU models and again added each of the 309 OTUs to them.  I repeated this process up to 10-OTU models.
 
 Here's an example for the 4 OTU models
 
@@ -57,12 +57,12 @@ library(AICcmodavg)
 
 {% highlight r %}
 setwd("~/Desktop/glne007/")
-meta <- read.delim("training.meta.txt", header = T, sep = "\t")
+meta <- read.delim("training.meta.txt", header = T, sep = "\t")  #this file contains all of the metadata
 shared <- read.delim("training.an.0.03.0.03.subsample.0.03.filter.shared", header = T, 
     sep = "\t")
 shared <- shared[, -ncol(shared)]  #removes rareOtus column from the filtered shared file
-shared <- shared[meta$dx != "adenoma", ]
-meta <- meta[meta$dx != "adenoma", ]
+shared <- shared[meta$dx != "adenoma", ]  #removed adenoma samples from shared file
+meta <- meta[meta$dx != "adenoma", ]  #removed adenoma samples from metadata file
 
 meta$dx <- as.character(meta$dx)
 meta$dx[meta$dx == "normal"] <- 0
@@ -81,20 +81,22 @@ for (x in otus) {
 }
 
 getDuplicates <- function(x) {
-    # removes models with duplicate OTUs
+    # finds models with duplicate OTUs
     return(length(x) - length(unique(unlist(x))))
 }
 dups <- apply(combos, MARGIN = 1, FUN = getDuplicates)
-combos <- combos[!dups, ]
+combos <- combos[!dups, ]  #removes models with duplicate OTUs
 
 fun <- function(r) {
+    # this function returns each of the OTUs that go into a model, and the AIC
+    # for that model
     return(c(r[1], r[2], r[3], r[4], AICc(suppressWarnings(glm(dx ~ mydata[, 
         r[1]] + mydata[, r[2]] + mydata[, r[3]] + mydata[, r[4]], data = mydata, 
         family = binomial("logit"))))))
-}
+}  # the warnings I'm suppressing are 'glm.fit: fitted probabilities numerically 0 or 1 occurred'.  For our purposes, probabilities of 0 or 1 are great!
 results <- apply(X = combos, MARGIN = 1, FUN = fun)
 results <- t(results)
-results <- results[order(results[, 5], decreasing = F), ]
+results <- results[order(results[, 5], decreasing = F), ]  #order results by AIC
 colnames(results) <- c("OTU1", "OTU2", "OTU3", "OTU4", "AIC")
 head(results, n = 10)
 {% endhighlight %}
@@ -116,15 +118,15 @@ head(results, n = 10)
 {% endhighlight %}
 
 
-Using the best models with 3-10 OTUs, I regenerated the ROC curves for models with only microbiome data.
+Using the best models I found with 3-10 OTUs (though not necessarily the absolute best models, since I didn't test all possible combinations of OTUs), I generated ROC curves.
 
 ###Cancer vs Healthy: 3,5,7,10 OTUs
-<img src="/../figs/cancerHealthy.png" title="center" alt="center" style="display: block; margin: auto;" />
+<img src="/../figs/cancerHealthy-1.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
 ### Adenoma vs Healthy: 3,5,7,10 OTUs
-<img src="/../figs/adenomaHealthy.png" title="center" alt="center" style="display: block; margin: auto;" />
+<img src="/../figs/adenomaHealthy-1.png" title="center" alt="center" style="display: block; margin: auto;" />
 
 
 ### Lesion vs Healthy: 3,5,7,10 OTUs
-<img src="/../figs/lesionHealthy.png" title="center" alt="center" style="display: block; margin: auto;" />
+<img src="/../figs/lesionHealthy-1.png" title="center" alt="center" style="display: block; margin: auto;" />
