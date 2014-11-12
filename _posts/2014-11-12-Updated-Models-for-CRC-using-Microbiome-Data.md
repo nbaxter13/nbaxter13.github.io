@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "Updated Models for CRC Diagnosis Using Microbiome Data"
 author: "Niel"
 date: "November 7, 2014"
@@ -37,7 +38,7 @@ for (r in 1:10) {
 
 That is way too many models, so I need a way to run fewer of them while still finding the best (or nearly the best) models (i.e. a [heuristic](http://en.wikipedia.org/wiki/Heuristic_(computer_science))).
 
-This is the heuristic I decided to use. First I calculated all possible 3-OTU models (4.869634 &times; 10<sup>6</sup> combinations). Then, rather than test all possible 4-OTU models (3.72527 &times; 10<sup>8</sup>), I took the top 100 of the 3-OTUs models and sequentially added each of the 309 OTUs to them.  This results approximately 3.09 &times; 10<sup>4</sup> 4-OTU models and saves lots of time.  I then took the 100 best of those 4-OTU models and again added each of the 309 OTUs to them.  I repeated this process up to 10-OTU models.
+This is the heuristic I decided to use. First I calculated all possible 3-OTU models (4.869634 &times; 10<sup>6</sup> combinations). Then, rather than test all possible 4-OTU models (3.72527 &times; 10<sup>8</sup>), I took the top 100 of the 3-OTUs models and sequentially added each of the 309 OTUs to them.  This resulted approximately 3.09 &times; 10<sup>4</sup> 4-OTU models and saved lots of time.  I then took the 100 best of those 4-OTU models and again added each of the 309 OTUs to them.  I repeated this process up to 10-OTU models.
 
 Here's an example for the 4 OTU models
 
