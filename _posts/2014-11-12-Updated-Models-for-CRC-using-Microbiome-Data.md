@@ -3,6 +3,7 @@ layout: post
 title: "Updated Models for CRC Diagnosis Using Microbiome Data"
 author: "Niel"
 date: "November 7, 2014"
+comments: true
 output:
   html_document:
     keep_md: yes
