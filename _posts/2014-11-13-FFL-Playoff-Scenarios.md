@@ -74,7 +74,7 @@ Here's a table of the scores for each week and a plot of the scores on Week 10 c
 
 ![center](/../figs/2014-11-13-FFL-Playoff-Scenarios/correlation-1.png) 
 
-That gives a correlation coefficient of 0.57 and a p-value of 0.085.  It's not exactly a perfect correlation or statistically significant, but it's good enough for a blog post that nobody's going to read about fantasy football league that maybe 6 people care about.  By assuming teams scores are stable and normally distributed we can use the mean and variance of each teams scores to determine the probability that Team A will score more points than Team B.
+It looks like past performance is an okay predictor of a teams score.  There's a correlation coefficient of 0.57 and a p-value of 0.085.  It's not exactly a perfect correlation or statistically significant, but it's good enough for a blog post that nobody's going to read about fantasy football league that maybe 6 people care about.  By assuming teams scores are stable and normally distributed we can use the mean and variance of each teams scores to determine the probability that Team A will score more points than Team B.
 
 
 
