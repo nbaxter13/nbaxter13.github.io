@@ -3,6 +3,7 @@ layout: post
 title: 'Fantasy Football Update: Playoff Scenarios'
 author: "Niel"
 date: "November 12, 2014"
+comments: true
 output:
   html_document:
     keep_md: yes
