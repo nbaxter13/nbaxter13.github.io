@@ -98,7 +98,7 @@ The only scenario where Alyx doesn't advance is if she loses AND Jhansi wins. Th
 We'll do the same thing for the SchlossBot except that we have to keep in mind the total Points For tiebreaker, which makes things a little trickier. For SchlossBot to make the playoffs, he would have to beat Alyx OR have Jhansi lose and be within 58 points of her score.  We can add the probabilities of those two scenarios to calculate SchlossBots chances.  The odds of beating Alyx is 0.282. The combined probability that both SchlossBot and Jhansi lose (0.469), and SchlossBot stays ahead in total points(0.947) is 0.444.  Adding those probabilities makes SchlossBot's chance of making the playoffs by any means **0.726**.
 
 * **Jhansi, def not Matt**  
-Jhansi needs to either win her game OR hope that SchlossBot loses and beat him by more than 58 points.  The probability that she wins is 0.347.  The probability of the other scenario is 0.0251.  Her total probability is equal to those two added together (**0.372**.
+Jhansi needs to either win her game OR hope that SchlossBot loses and beat him by more than 58 points.  The probability that she wins is 0.347.  The probability of the other scenario is 0.0251.  Her total probability is equal to those two added together (**0.372**.)
 
 
 BAM!!! Check out those numbers.  If I did everything right, the probabilities in bold should add up to 2, since 2 out of 3 teams will make it.  Now all that's left to do is to fix your line-ups and get ready for the playoffs. And in case you missed the first one, here's the full version...
