@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Fantasy Football Update: Playoff Scenarios'
+title: 'Schloss Lab Fantasy Football Update: Playoff Scenarios'
 author: "Niel"
 date: "November 12, 2014"
 comments: true
