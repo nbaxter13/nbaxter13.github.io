@@ -9,7 +9,7 @@ output:
     keep_md: yes
 ---
 
-![](../figs/mora.png)
+![](/figs/mora.png)
 
 We are approaching the last weekend of the regular season in the Schloss et al. Fantasy Football League (SFFL), which means playoffs are right around the corner.  Because I'm such a generous commissioner, 8 out of 10 teams will make the playoffs and have a chance of becoming the SFFL 2014 Champion.  
 
