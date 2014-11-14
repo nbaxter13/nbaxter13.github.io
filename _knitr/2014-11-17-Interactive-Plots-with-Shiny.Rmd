@@ -1,0 +1,117 @@
+---
+title: "Interactive Plots with Shiny"
+author: "Niel"
+date: "November 17, 2014"
+comments: true
+output:
+  html_document:
+    keep_md: yes
+runtime: shiny
+---
+
+```{r, echo=FALSE}
+library(knitr)
+library(shiny)
+```
+
+
+```{r, winProbFunction, echo=FALSE}
+scores<-read.delim('~/Desktop/FFL/scores.byTeam.txt', sep='\t', row.names=1)
+teams <- row.names(scores)
+winProb <- function(team1,team2,margin=0){ #calculates the probability that team1 will beat team2 by a given margin
+  mu <- mean(unlist(scores[team1,])) - mean(unlist(scores[team2,])) #mu is the mean difference in scores betwen the Teams 1 and 2
+  sigma <- sqrt(sd(unlist(scores[team1,])) + sd(unlist(scores[team2,]))) #sigma is their combined variance
+  phi <- 1-(mu/sigma)*-1 #phi is the distribution of the differences in score
+  prob <- 1-pnorm(margin, mean=mu, sd=sigma^2) #then we can calculate the probability of Team1 beating Team2
+  return(prob)
+}
+```
+
+
+### Calculating Win Probability
+```{r, winProbWidget, echo=F}
+inputPanel(
+  selectInput("team1", label="Winner", choices=teams, selected="20% effort 80% victory"),
+  selectInput("team2", label="Loser", choices=teams, selected="Team McCrone"),
+  numericInput("marg", label="Minimum Margin of Victory", value=0)
+)
+
+renderPrint({
+  format(winProb(input$team1, input$team2, margin=input$marg), digits=3)
+  })
+```
+  
+  
+
+
+### Plotting Selected Teams
+```{r scoreByWeek, fig.align='center', echo=F}
+flowLayout(
+  checkboxGroupInput("whichTeams", label="Teams to Display", choices=teams, selected=teams, inline=T)
+)
+
+
+output <- reactive({
+  rows <- match(input$whichTeams, teams)
+  cols <- c('red','blue','green','orange','yellow','purple','black','grey','dark red','dark green')
+  plot(0, type='n', ylim=c(40,200), xlim=c(1,10), ylab='Score', xlab='Week', cex.lab=1.8, cex.axis=1.8)
+  for(i in rows){
+    points(unlist(scores[i,]), type='l', col=cols[i], lwd=3)
+    }
+  legend('topleft', legend=input$whichTeams, col=cols[rows], lwd=3)
+})
+
+renderPlot({output()}, height=600, width=800)
+
+```
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+.
+
+
+
+```{r, echo=FALSE}
+inputPanel(
+  selectInput("n_breaks", label = "Number of bins:", choices = c(10, 20, 35, 50), selected = 20),
+  sliderInput("bw_adjust", label = "Bandwidth adjustment:",min = 0.2, max = 2, value = 1, step = 0.2)
+)
+
+renderPlot({
+  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),
+       xlab = "Duration (minutes)", main = "Geyser eruption duration")
+  
+  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
+  lines(dens, col = "blue")
+})
+```
+
+
+
+```{r, echo=FALSE}
+shinyAppDir(
+  system.file("examples/06_tabsets", package="shiny"),
+  options=list(
+    width="100%", height=550
+  )
+)
+```
+
+Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+
+You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+
+In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+
+
+
