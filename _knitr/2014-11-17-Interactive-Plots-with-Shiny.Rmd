@@ -9,7 +9,15 @@ output:
 runtime: shiny
 ---
 
-```{r, echo=FALSE}
+###Resources
+* [Using Shiny in R Markdown](http://rmarkdown.rstudio.com/authoring_shiny.html)
+* [Shiny Tutorial](http://shiny.rstudio.com/tutorial/)
+* [Function Reference](http://shiny.rstudio.com/reference/shiny/latest/)
+* [Input Widgets](http://shiny.rstudio.com/tutorial/lesson3/)
+
+
+###Examples
+```{r, echo=F}
 library(knitr)
 library(shiny)
 ```
@@ -17,23 +25,25 @@ library(shiny)
 
 ```{r, winProbFunction, echo=FALSE}
 scores<-read.delim('~/Desktop/FFL/scores.byTeam.txt', sep='\t', row.names=1)
+kable(scores)
 teams <- row.names(scores)
 winProb <- function(team1,team2,margin=0){ #calculates the probability that team1 will beat team2 by a given margin
   mu <- mean(unlist(scores[team1,])) - mean(unlist(scores[team2,])) #mu is the mean difference in scores betwen the Teams 1 and 2
   sigma <- sqrt(sd(unlist(scores[team1,])) + sd(unlist(scores[team2,]))) #sigma is their combined variance
   phi <- 1-(mu/sigma)*-1 #phi is the distribution of the differences in score
   prob <- 1-pnorm(margin, mean=mu, sd=sigma^2) #then we can calculate the probability of Team1 beating Team2
-  return(prob)
+  out <- sprintf("The probability that %s will beat %s by %i or more is %s", team1, team2, margin, format(prob, digits=2))
+  return(out)
 }
 ```
 
 
-### Calculating Win Probability
-```{r, winProbWidget, echo=F}
+####Pull-down Menus and Numeric Inputs
+```{r, winProbWidget, echo=FALSE}
 inputPanel(
   selectInput("team1", label="Winner", choices=teams, selected="20% effort 80% victory"),
   selectInput("team2", label="Loser", choices=teams, selected="Team McCrone"),
-  numericInput("marg", label="Minimum Margin of Victory", value=0)
+  numericInput("marg", label="Margin of Victory", value=0)
 )
 
 renderPrint({
@@ -41,11 +51,9 @@ renderPrint({
   })
 ```
   
-  
 
-
-### Plotting Selected Teams
-```{r scoreByWeek, fig.align='center', echo=F}
+#### Multiple Checkboxes
+```{r scoreByWeek, fig.align='center', echo=FALSE}
 flowLayout(
   checkboxGroupInput("whichTeams", label="Teams to Display", choices=teams, selected=teams, inline=T)
 )
@@ -65,22 +73,50 @@ renderPlot({output()}, height=600, width=800)
 
 ```
 
-.
+```{r, echo=FALSE, eval=FALSE}
+scores<-read.delim('~/Desktop/FFL/scores.byTeam.txt', sep='\t', row.names=1)
+teams <- row.names(scores)
 
-.
+shinyUI(pageWithSidebar(
 
-.
+  headerPanel("Tabsets"),
+  
+  sidebarPanel(
+    checkboxGroupInput("whichTeams", label="Teams to Display", choices=teams, selected=teams, inline=F)
+  ),
 
-.
+  mainPanel(
+    tabsetPanel(
+      tabPanel("Plot", plotOutput("plot")), 
+      tabPanel("Table", tableOutput("table"))
+    )
+  )
+))
 
-.
+shinyServer(function(input, output) {
 
-.
+  outplot <- reactive({
+    rows <- match(input$whichTeams, teams)
+    cols <- c('red','blue','green','orange','yellow','purple','black','grey','dark red','dark green')
+    plot(0, type='n', ylim=c(40,200), xlim=c(1,10), ylab='Score', xlab='Week', cex.lab=1.8, cex.axis=1.8)
+    for(i in rows){
+      points(unlist(scores[i,]), type='l', col=cols[i], lwd=3)
+      }
+    legend('topleft', legend=input$whichTeams, col=cols[rows], lwd=3)
+    })
 
-.
+output$plot <- renderPlot({outplot()}, height=400, width=400)
+
+ output$table <- renderTable({
+    scores
+  })
+})
 
 
+```
 
+
+####Numeric Slider
 ```{r, echo=FALSE}
 inputPanel(
   selectInput("n_breaks", label = "Number of bins:", choices = c(10, 20, 35, 50), selected = 20),
@@ -107,11 +143,8 @@ shinyAppDir(
 )
 ```
 
-Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
 
-You can also use the `shinyApp` function to define an application inline rather then in an external directory.
-
-In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
-
-
+```{r, eval=FALSE, echo=F}
+runApp("~/Desktop/github/nbaxter13.github.io/shiny_apps/hello")
+```
 
