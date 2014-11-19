@@ -3,6 +3,7 @@ title: "Interactive Plots with Shiny"
 author: "Niel"
 date: "November 17, 2014"
 comments: true
+layout: post
 output:
   html_document:
     keep_md: yes
