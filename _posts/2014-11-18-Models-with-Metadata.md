@@ -12,8 +12,7 @@ In an [earlier post](http://nbaxter13.github.io/2014/11/07/Updated-Models-for-CR
 
 
 ### Healthy vs. Carcinoma
-I'll start with models for distinguishing healthy patients from those with carcinomas.  I'll run models containing 1 to 5 risk factors, and look for the one 
-with the lowest conditional Akaike Information Criteria (AICc). The table below shows the 10 best models with 1 to 5 risk factors. The best model uses age, gender, and smoking, all of which are known risk factors for CRC ( [Gender](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-key-statistics), [Age and Smoking](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-risk-factors)).
+First I'll show the models for distinguishing healthy patients from those with carcinomas.  I ran models containing 1 to 5 risk factors, and looked for the one with the lowest conditional Akaike Information Criteria (AICc). The table below shows the 10 best models with 1 to 5 risk factors. The best model used age, gender, and smoking, all of which are known risk factors for CRC ( [Gender](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-key-statistics), [Age and Smoking](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-risk-factors)).
 
 
 |Model                                     |AICc   |
@@ -33,7 +32,7 @@ with the lowest conditional Akaike Information Criteria (AICc). The table below 
   
 
 ### Healthy vs. Adenoma
-Now I'll do the same thing, but for adenomas.  The best model uses age, BMI, diabetes medication, gender, and smoking.  This model is only slightly better than the same model without diabetes medication.  
+Next I did the same thing, but for adenomas.  The best model again used age, gender and smoking, but also included BMI and diabetes medication.  That model was only slightly better than the same model without diabetes medication.  
 
 
 |Model                                     |AICc   |
@@ -52,7 +51,7 @@ Now I'll do the same thing, but for adenomas.  The best model uses age, BMI, dia
   
 
 ### Healthy vs. Lesion
-Finally, I'll test models for distinguishing healthy individuals from those with any type of lesion(i.e. adenomas OR caricnomas). Like the carcinoma models, the best model for detecting any type of lesion also uses age, gender, and smoking.
+Finally, I tested models for distinguishing healthy individuals from those with any type of lesion (i.e. adenomas OR caricnomas). Like the carcinoma models, the best model for detecting any type of lesion also used age, gender, and smoking.
 
 
 |Model                                     |AICc   |
@@ -70,11 +69,14 @@ Finally, I'll test models for distinguishing healthy individuals from those with
 
 
 ### ROC Curves Using Metadata Models
-Next, I want to use these models to generate ROC curves.  Since all of the best models use age, gender, and smoking, I decided to only use those parameters in the models. (Note: I did also try the optimal adenoma model that included BMI and diabetes meds, but the AUC of the ROC curve wasn't significantly different from the model with just age, gender, and smoking)
+Next, I wanted to use these models to generate ROC curves.  Since all of the best models use age, gender, and smoking, I decided to only use those three parameters in the models. (Note: I did also try the optimal adenoma model that included BMI and diabetes meds, but the AUC of the ROC curve wasn't significantly different from the model with just age, gender, and smoking)
 
 ![center](/../figs/2014-11-18-Models-with-Metadata/roc-1.png) 
-  
-  
+
+UPDATE: As Pat requested, I've added the model for Adenoma vs. Carcinoma
+
 ####Conclusion
 Surprisingly, all three comparison have very similar ROC curves despite their different AICc values.  I suspect that's due to each having a different n. Now that I have models using patient metadata, my next step will be to combine them with the microbiome data and FIT results. Considering how good these models and the OTU models were, I expect have very good models when I combine them all together.
+
+
 
