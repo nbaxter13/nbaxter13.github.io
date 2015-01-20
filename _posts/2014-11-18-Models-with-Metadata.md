@@ -12,7 +12,7 @@ In an [earlier post](http://nbaxter13.github.io/2014/11/07/Updated-Models-for-CR
 
 
 ### Healthy vs. Carcinoma
-First I'll show the models for distinguishing healthy patients from those with carcinomas.  I ran models containing 1 to 5 risk factors, and looked for the one with the lowest conditional Akaike Information Criteria (AICc). The table below shows the 10 best models with 1 to 5 risk factors. The best model used age, gender, and smoking, all of which are known risk factors for CRC ( [Gender](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-key-statistics), [Age and Smoking](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-risk-factors)).
+First I'll show the models for distinguishing healthy patients from those with carcinomas.  I ran models containing 1 to 5 risk factors, and looked for the one with the lowest corrected Akaike Information Criteria (AICc). The table below shows the 10 best models with 1 to 5 risk factors. The best model used age, gender, and smoking, all of which are known risk factors for CRC ( [Gender](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-key-statistics), [Age and Smoking](http://www.cancer.org/cancer/colonandrectumcancer/detailedguide/colorectal-cancer-risk-factors)).
 
 
 |Model                                     |AICc   |
